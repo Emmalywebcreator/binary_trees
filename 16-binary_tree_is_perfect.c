@@ -1,39 +1,49 @@
 #include "binary_trees.h"
 
 /**
- * binary_tree_height - Measures the height of a binary tree.
- * @tree: A pointer to the root node of the tree to measure the height.
+ * get_depth - Computes the depth of the leftmost path of the tree
+ * @tree: Pointer to the root node of the tree to measure the depth
  *
- * Return: If tree is NULL, your function must return 0, else return height.
+ * Return: Depth of the leftmost path
  */
-size_t binary_tree_height(const binary_tree_t *tree)
+int get_depth(const binary_tree_t *tree)
 {
-        size_t left_height = 0, right_height = 0;
+	int depth = 0;
+	while (tree != NULL)
+	{
+		depth++;
+		tree = tree->left;
+	}
+	return depth;
+}
 
-        if (tree == NULL)
-        {
-                return (0);
-        }
+/**
+ * is_perfect_recursive - Recursively checks if the tree is perfect
+ * @tree: Pointer to the current node of the tree to check
+ * @depth: Depth of the leftmost path
+ * @level: Current level in the tree
+ *
+ * Return: 1 if the tree is perfect, otherwise 0
+ */
+int is_perfect_recursive(const binary_tree_t *tree, int depth, int level)
+{
+	if (tree == NULL)
+	{
+		return (1);
+	}
 
-        if (tree->left)
-        {
-                left_height = 1 + binary_tree_height(tree->left);
-        }
-        else
-        {
-                left_height = 0;
-        }
+	if (tree->left == NULL && tree->right == NULL)
+	{
+		return (depth == level + 1);
+	}
 
-        if (tree->right)
-        {
-                right_height = 1 + binary_tree_height(tree->right);
-        }
-        else
-        {
-                right_height = 0;
-        }
+	if (tree->left == NULL || tree->right == NULL)
+	{
+		return (0);
+	}
 
-        return ((left_height > right_height) ? left_height : right_height);
+	return (is_perfect_recursive(tree->left, depth, level + 1) &&
+			is_perfect_recursive(tree->right, depth, level + 1));
 }
 
 /**
@@ -44,28 +54,13 @@ size_t binary_tree_height(const binary_tree_t *tree)
  */
 int binary_tree_is_perfect(const binary_tree_t *tree)
 {
+	int depth;
+
 	if (tree == NULL)
 	{
 		return (0);
 	}
 
-	size_t left_height = binary_tree_height(tree->left);
-	size_t right_height = binary_tree_height(tree->right);
-
-	if (left_height != right_height)
-	{
-		return (0);
-	}
-
-	if (tree->left == NULL && tree->right == NULL)
-	{
-		return (1);
-	}
-
-	if (tree->left != NULL && tree->right != NULL)
-	{
-		return binary_tree_is_perfect(tree->left) && binary_tree_is_perfect(tree->right);
-	}
-
-	return (0);
+	depth = get_depth(tree);
+	 return (is_perfect_recursive(tree, depth, 0));
 }
