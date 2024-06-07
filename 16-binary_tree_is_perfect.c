@@ -9,12 +9,13 @@
 int get_depth(const binary_tree_t *tree)
 {
 	int depth = 0;
+
 	while (tree != NULL)
 	{
 		depth++;
 		tree = tree->left;
 	}
-	return depth;
+	return (depth);
 }
 
 /**
@@ -62,5 +63,5 @@ int binary_tree_is_perfect(const binary_tree_t *tree)
 	}
 
 	depth = get_depth(tree);
-	 return (is_perfect_recursive(tree, depth, 0));
+	return (is_perfect_recursive(tree, depth, 0));
 }
